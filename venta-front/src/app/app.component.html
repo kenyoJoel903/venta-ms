@@ -1,0 +1,27 @@
+<div class="example-container">
+  <mat-toolbar color="primary" class="example-toolbar" *ngIf="authService.isLogin()">
+    <button mat-icon-button class="example-icon"  (click)="drawer.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>Venta</span>
+    <span class="example-spacer"></span>
+  </mat-toolbar>
+
+  <mat-drawer-container class="example-container" autosize>
+    <mat-drawer #drawer class="example-sidenav" mode="side" style="width: 200px" >
+      <p>Venta App</p>
+      <div *ngFor="let m of menus">
+        <button mat-menu-item  (click)="drawer.toggle()" routerLink="{{m.url}}" style="cursor: pointer" >
+            <span>{{m.label}}</span>
+        </button>
+        <mat-divider></mat-divider>
+    </div>
+    </mat-drawer>
+  
+    <div class="example-sidenav-content">
+      <router-outlet></router-outlet>
+    </div>
+  
+  </mat-drawer-container>
+  
+</div>

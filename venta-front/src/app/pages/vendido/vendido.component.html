@@ -1,0 +1,47 @@
+<mat-toolbar>Vendidos</mat-toolbar>
+
+<div class="productos-content">
+
+    <mat-table
+        [dataSource]="dataSource"
+        [@animateStagger]="{ value: '50' }"
+        fusePerfectScrollbar
+      >
+
+        <ng-container matColumnDef="nombre">
+          <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{element.nombre}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="precio">
+          <mat-header-cell *matHeaderCellDef>Precio</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{ element.precio }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="vendido">
+          <mat-header-cell *matHeaderCellDef>Vendido</mat-header-cell>
+          <mat-cell *matCellDef="let element">{{ element.vendido ? 'SI' : 'NO' }}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="usuarioVendedor">
+            <mat-header-cell *matHeaderCellDef>Vendedor</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element.usuarioVendedor.nombres  }} {{element.usuarioVendedor.apellidos}}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="fechaModificacion">
+            <mat-header-cell *matHeaderCellDef>Fecha Venta</mat-header-cell>
+            <mat-cell *matCellDef="let element">{{ element.fechaModificacion  }} </mat-cell>
+          </ng-container>
+
+        <mat-header-row
+          *matHeaderRowDef="displayedColumns; sticky: true"
+        ></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+      </mat-table>
+
+      <mat-paginator
+        [length]="dataSource.filteredData.length"
+        [pageSizeOptions]="[5, 10, 25, 100]"
+      >
+      </mat-paginator>
+</div>

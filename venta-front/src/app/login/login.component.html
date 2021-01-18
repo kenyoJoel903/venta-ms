@@ -1,0 +1,33 @@
+<div class="login-container">
+    <mat-card class="example-card">
+        <mat-card-header>
+          <div mat-card-avatar class="example-header-image"></div>
+          <mat-card-title>Login</mat-card-title>
+        </mat-card-header>
+        <img mat-card-image src="https://www.pngitem.com/pimgs/m/105-1055419_user-avatar-login-account-profile-people-login-people.png" width="100px" height="200px"/>
+        <mat-card-content>
+          <form [formGroup]="loginForm" (ngSubmit)="login()">
+            <mat-form-field appearance="outline">
+                <mat-label>NICK</mat-label>
+                <input matInput formControlName="username" [readonly]="loading">
+                <mat-icon matSuffix class="secondary-text">mail</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Contraseña</mat-label>
+                <input matInput type="password" formControlName="password" [readonly]="loading">
+                <mat-icon matSuffix class="secondary-text">vpn_key</mat-icon>
+            </mat-form-field>
+
+            <button mat-raised-button color="accent" type="submit" [class.spinner]="loading" [disabled]="loading"
+                    [disabled]="loginForm.invalid">LOGIN
+            </button>
+          </form>
+        </mat-card-content>
+        <mat-card-actions>
+     
+        </mat-card-actions>
+      </mat-card>
+</div>
+
+  
