@@ -2,6 +2,8 @@
 <section name="Workbench">
 	<section name="MavenProjectWizardLocationPage">
 		<list key="location">
+			<item value="/home/kenyo/Personal/AVLA_TEST/msproductos/pom.xml"/>
+			<item value="/home/kenyo/Personal/AVLA_TEST/api-gateway"/>
 		</list>
 		<list key="projectNameTemplate">
 			<item value="[artifactId]"/>
@@ -24,13 +26,10 @@
 	</section>
 	<section name="Maven2ProjectWizardArchifactPage">
 		<list key="package">
-			<item value="org.register.server"/>
 		</list>
 		<list key="groupId">
-			<item value="com.kenyo.venta"/>
 		</list>
 		<list key="artifactId">
-			<item value="register-server"/>
 		</list>
 		<list key="projectNameTemplate">
 			<item value="[artifactId]"/>
@@ -46,12 +45,14 @@
 	</section>
 	<section name="MavenProjectWizardArtifactPage">
 		<list key="groupId">
+			<item value="com.kenyo.securidad"/>
 			<item value="com.kenyo.venta.register"/>
 			<item value="com.kenyo.venta"/>
 		</list>
 		<list key="name">
 		</list>
 		<list key="artifactId">
+			<item value="comp-seguridad"/>
 			<item value="register-server"/>
 			<item value="venta-ms"/>
 		</list>
@@ -64,6 +65,7 @@
 			<item value="[name]"/>
 		</list>
 		<list key="version">
+			<item value="0.0.1"/>
 			<item value="0.0.1-SNAPSHOT"/>
 		</list>
 	</section>

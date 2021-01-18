@@ -7,8 +7,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
-@Table(name = "productos")
+@Table(name = "usuarios")
 public class Usuario {
 	
 	@Id
@@ -21,6 +23,7 @@ public class Usuario {
 	private String apellidos;
 	@Column(nullable = false)
 	private String nick;
+	@JsonIgnore
 	@Column(nullable = false)
 	private String clave;
 	

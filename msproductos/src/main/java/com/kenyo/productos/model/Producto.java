@@ -12,12 +12,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kenyo.productos.util.Constant;
 
 @Entity
-@Table(name = "productos")
+@Table(name = "productos", 
+ uniqueConstraints = {
+		 @UniqueConstraint(columnNames = "nombre")
+ })
 public class Producto {
 	
 	@Id

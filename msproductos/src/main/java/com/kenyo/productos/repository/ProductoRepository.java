@@ -16,5 +16,7 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
 	
 	@Query("from Producto p Where p.vendido = false and p.robadoPerdido = false")
 	List<Producto> listarProductosPendienteVender();
+	
+	boolean existsByNombre(String nombre);
 
 }

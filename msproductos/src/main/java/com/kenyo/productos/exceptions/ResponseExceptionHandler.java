@@ -46,6 +46,14 @@ private static final Logger log = LoggerFactory.getLogger(ResponseExceptionHandl
 		log.info("ERROR INTERNAL_SERVER_ERROR: {}", ex.getMessage());
 		return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	@ExceptionHandler(VentaException.class)
+	public final ResponseEntity<ResponseDto> manejarExcepciones(Exception ex, WebRequest request) {
+		ResponseDto responseDto = new ResponseDto();
+		responseDto.setError(ex.getMessage());
+		log.info("ERROR INTERNAL_SERVER_ERROR: {}", ex.getMessage());
+		return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 
 	@ExceptionHandler(ModelNotFoundException.class)
 	public final ResponseEntity<ResponseDto> manejarModeloExcepciones(ModelNotFoundException ex,

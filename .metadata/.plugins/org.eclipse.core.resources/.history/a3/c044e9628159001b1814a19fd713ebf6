@@ -1,0 +1,20 @@
+package com.kenyo.productos.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.kenyo.productos.model.Producto;
+
+public interface ProductoRepository extends JpaRepository<Producto, Long> {
+	
+	@Query("from Producto p Where p.usuarioVendedor.id = :vendedor")
+	List<Producto> buscarPorVendedor(@Param("vendedor") long idVendedor);
+	
+	
+	@Query("from Producto p Where p.vendido = false and p.robadoPerdido = false")
+	List<Producto> listarProductosPendienteVender();
+
+}

@@ -1,21 +1,95 @@
 package com.kenyo.productos.controller;
 
+import java.security.Principal;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kenyo.productos.exceptions.ResponseDto;
 import com.kenyo.productos.model.Producto;
+import com.kenyo.productos.service.ProductoService;
 
 @RestController
 @RequestMapping("/productos")
 public class ProductoController {
 	
+	@Autowired
+	private ProductoService productoService;
+	
+	@PostMapping
+	public ResponseEntity<ResponseDto> registrar(@RequestBody Producto producto, Principal principal) {
+		ResponseDto response = new ResponseDto();
+		response.setData(productoService.registrar(producto, principal.getName()));
+		response.setMensaje("Producto registrado exitosamente");
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
+	
+	@PutMapping
+	public ResponseEntity<ResponseDto> actualizar(@RequestBody Producto producto, Principal principal) {
+		ResponseDto response = new ResponseDto();
+		response.setData(productoService.actualizar(producto, principal.getName()));
+		response.setMensaje("Producto actualizado exitosamente");
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@PutMapping(path = "/vender/{id}")
+	public ResponseEntity<ResponseDto> venderProducto(@PathVariable long id, Principal principal) {
+		ResponseDto response = new ResponseDto();
+		response.setData(productoService.marcarComoVendido(id, principal.getName()));
+		response.setMensaje("Producto vendido exitosamente");
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@PutMapping(path = "/registarPerdido/{id}")
+	public ResponseEntity<ResponseDto> registrarPerdido(@PathVariable long id, Principal principal) {
+		ResponseDto response = new ResponseDto();
+		response.setData(productoService.marcarComoPerdido(id, principal.getName()));
+		response.setMensaje("Producto registrado como perdido/robado exitosamente");
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	
 	@GetMapping
-	public Producto test() {
-		System.out.println("ssssssss");
-		Producto p = new Producto();
-		p.setNombre("aaaaaaa");
-		return p;
+	public ResponseEntity<ResponseDto> listar() {
+		ResponseDto response = new ResponseDto();
+		response.setData(productoService.listarTodos());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping(path = "/{id}")
+	public ResponseEntity<ResponseDto> listarPorId(@PathVariable long id) {
+		ResponseDto response = new ResponseDto();
+		response.setData(productoService.buscarPorId(id));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping(path = "/listarPendientesPorVender")
+	public ResponseEntity<ResponseDto> listarPendientesPorVender() {
+		ResponseDto response = new ResponseDto();
+		response.setData(productoService.listarPendientesVender());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping(path = "/listarPorVendedor")
+	public ResponseEntity<ResponseDto> listarPorVendedor(Principal principal) {
+		ResponseDto response = new ResponseDto();
+		response.setData(productoService.listarPorVendedor(principal.getName()));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@DeleteMapping(path = "/{id}")
+	public ResponseEntity<Void> eliminar(@PathVariable long id) {
+		productoService.eliminar(id);
+		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 
 }

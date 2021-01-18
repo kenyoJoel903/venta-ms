@@ -1,0 +1,72 @@
+package com.kenyo.productos.controller;
+
+import java.security.Principal;
+
+import javax.websocket.server.PathParam;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.kenyo.productos.exceptions.ResponseDto;
+import com.kenyo.productos.model.Producto;
+import com.kenyo.productos.service.ProductoService;
+
+@RestController
+@RequestMapping("/productos")
+public class ProductoController {
+	
+	@Autowired
+	private ProductoService productoService;
+	
+	@PostMapping
+	public ResponseEntity<ResponseDto> registrar(@RequestBody Producto producto) {
+		ResponseDto response = new ResponseDto();
+		response.setData(productoService.registrar(producto));
+		return new ResponseEntity<>(response, HttpStatus.CREATED);
+	}
+	
+	@PutMapping
+	public ResponseEntity<ResponseDto> actualizar(@RequestBody Producto producto) {
+		ResponseDto response = new ResponseDto();
+		response.setData(productoService.actualizar(producto));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	
+	@GetMapping
+	public ResponseEntity<ResponseDto> listar() {
+		ResponseDto response = new ResponseDto();
+		response.setData(productoService.listarTodos());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping(path = "/{id}")
+	public ResponseEntity<ResponseDto> listarPorId(@PathVariable long id) {
+		ResponseDto response = new ResponseDto();
+		response.setData(productoService.buscarPorId(id));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping(path = "/listarPendientesPorVender")
+	public ResponseEntity<ResponseDto> listarPendientesPorVender() {
+		ResponseDto response = new ResponseDto();
+		response.setData(productoService.listarPendientesVender());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping(path = "/listarPendientesPorVendedor")
+	public ResponseEntity<ResponseDto> listarPorVendedor(Principal principal) {
+		ResponseDto response = new ResponseDto();
+		response.setData(productoService.listarPorVendedor(principal.getName()));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+}
