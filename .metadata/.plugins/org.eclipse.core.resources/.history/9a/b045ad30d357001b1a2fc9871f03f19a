@@ -1,0 +1,12 @@
+server:
+  port: 2222
+     
+spring:
+  application:
+    name: producto-service
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+

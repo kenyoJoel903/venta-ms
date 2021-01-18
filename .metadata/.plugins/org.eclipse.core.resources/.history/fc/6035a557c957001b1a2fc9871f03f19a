@@ -1,0 +1,52 @@
+package com.kenyo.productos.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.kenyo.productos.model.Producto;
+import com.kenyo.productos.repository.ProductoRepository;
+
+@Service
+public class ProductoServiceImpl implements ProductoService {
+	
+	@Autowired
+	private ProductoRepository repository;
+
+	@Override
+	public Producto registrar(Producto producto) {
+		return repository.save(producto);
+	}
+
+	@Override
+	public Producto actualizar(Producto producto) {
+		return repository.save(producto);
+	}
+
+	@Override
+	public Producto buscarPorId(long id) {
+		Optional<Producto> opt = repository.findById(id);
+		return null;
+	}
+
+	@Override
+	public List<Producto> listarTodos() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Producto> listarPorVendedor(long idVendedor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Producto> listarPendientesVender() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

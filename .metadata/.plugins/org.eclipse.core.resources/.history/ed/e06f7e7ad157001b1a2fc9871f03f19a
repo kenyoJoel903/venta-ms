@@ -1,0 +1,32 @@
+server:  
+  port: ${PORT:8765}
+
+spring:  
+  application:
+    name: gateway-server
+  datasource:
+    url: jdbc:mysql://192.168.99.100:33306/default?useSSL=false
+    username: default
+    password: default
+
+logging:
+  level:
+    org.springframework.cloud.netflix.zuul: TRACE
+      
+zuul:
+  routes:  
+    uaa:
+      path: /auth/**
+      sensitiveHeaders:
+      serviceId: auth-server
+    account:
+      path: /product/**
+      sensitiveHeaders: 
+      serviceId: product-service
+      
+eureka:
+  client:
+    registerWithEureka: false
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+

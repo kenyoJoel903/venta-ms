@@ -1,0 +1,5 @@
+package com.kenyo.api.gateway;
+
+public class SecurityConfig {
+
+}

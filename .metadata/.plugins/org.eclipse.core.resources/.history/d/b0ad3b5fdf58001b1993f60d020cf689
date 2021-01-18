@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: auth-server
+  cloud:
+    config:
+      discovery:
+        enabled: true
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost/producto_db
+    username: postgres
+    password: 123456
+
+server:
+   port: 8085
+
+
+demo:
+  venta:
+    jwtSecret: demoTiendaSecretKey
+    jwtExpirationMs: 86400000

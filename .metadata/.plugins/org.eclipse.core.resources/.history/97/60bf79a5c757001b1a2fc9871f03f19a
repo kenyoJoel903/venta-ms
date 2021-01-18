@@ -1,0 +1,5 @@
+package com.kenyo.productos.repository;
+
+public interface UsuarioRepository {
+
+}

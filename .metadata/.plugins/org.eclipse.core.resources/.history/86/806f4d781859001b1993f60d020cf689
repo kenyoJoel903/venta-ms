@@ -1,0 +1,51 @@
+package com.kenyo.auth.security.jwt;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
+
+import com.kenyo.auth.service.impl.UserDetailsImpl;
+import com.kenyo.seguridad.JwtUtils;
+
+import io.jsonwebtoken.*;
+
+/**
+ * genera un JWT de un username, date expiration, secret
+ * obtiene el username de un JWT
+ * valida JWT
+ * @author kenyo
+ *
+ */
+
+@Component
+public class JwtUtilsExt extends JwtUtils {
+
+	private static final Logger logger = LoggerFactory.getLogger(JwtUtilsExt.class);
+
+
+	
+	public String generateJwtToken(Authentication authentication) {
+
+		UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+
+		Map<String, Object> claims = new HashMap<String, Object>();
+		claims.put("roles", userPrincipal.getAuthorities().stream().map(r -> r.getAuthority()).collect(Collectors.toList()));
+		return Jwts.builder()
+				.setSubject((userPrincipal.getUsername()))
+				.setClaims(claims)
+				.setIssuedAt(new Date())
+				.setExpiration(new Date((new Date()).getTime() + super.getJwtExpirationMs()))
+				.signWith(SignatureAlgorithm.HS512, super.getJwtSecret())
+				.compact();
+	}
+
+	
+}

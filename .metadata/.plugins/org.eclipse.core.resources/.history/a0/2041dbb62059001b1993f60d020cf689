@@ -1,0 +1,11 @@
+spring.application.name=gateway-server
+server.port=8765
+eureka.client.service-url.default-zone=http://localhost:8761/eurka
+
+zuul.prefix=/api
+
+zuul.routes.productoService.path=/msproducto/**
+zuul.routes.productoService.service-id=producto-service
+
+zuul.routes.authService.path=/msauth/**
+zuul.routes.authService.service-id=autenticacion-service

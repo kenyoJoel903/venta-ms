@@ -1,0 +1,11 @@
+spring:
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+      
+demo:
+  venta:
+    jwtSecret: demoVentaSecretKey
+    jwtExpirationMs: 86400000

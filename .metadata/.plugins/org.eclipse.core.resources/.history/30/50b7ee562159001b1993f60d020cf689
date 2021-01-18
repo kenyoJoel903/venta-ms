@@ -1,0 +1,120 @@
+package com.kenyo.seguridad;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.GenericFilterBean;
+
+
+
+@Component
+public class JwtAutenticationFilter extends GenericFilterBean {
+
+	private static final String USUARIO = "USUARIO";
+
+	private static final String ALLOW_HEADERS = "Content-Type";
+
+	private static final String METHODS_HTTP = "GET, POST, PUT , OPTIONS, DELETE";
+
+	private static final String ALL_ORIGIN = "*";
+
+	private static final String HEADER_ACCESS_CONTROL_ALLOW_HEADERS = "Access-Control-Allow-Headers";
+
+	private static final String HEADER_ACCESS_CONTROL_ALLOW_METHODS = "Access-Control-Allow-Methods";
+
+	private static final String HEADER_ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
+
+	private static final String EMPTY = "";
+
+	private static final String PREFIX_ROLE = "ROLE_";
+	
+	private static final String HEADER_AUTHORIZATION = "Authorization";
+	
+	private static final Logger logger = LoggerFactory.getLogger(JwtAutenticationFilter.class);
+	
+	
+	@Autowired
+	private JwtUtils jwtUtils;
+	
+	
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
+		Authentication authentication = null;
+		HttpServletRequest rq = null;
+		
+		rq = (HttpServletRequest) request;
+		
+		logger.info("URI: " + rq.getServletPath());
+		
+		System.out.println(rq.getHeader(HEADER_AUTHORIZATION));
+		
+		try {
+			if(rq.getServletPath().indexOf("/security") >= 0) {
+				chain.doFilter(request, response);
+			} else  {
+				String userName;
+				String jwt = jwtUtils.parseJwt(rq.getHeader(HEADER_AUTHORIZATION));
+				logger.info("JWT: " + jwt );
+				if(jwt != null && jwtUtils.validateJwtToken(jwt)) {
+					userName = jwtUtils.getUserNameFromJwtToken(jwt);
+					logger.info("User: " + userName);
+					
+					
+					if(userName != null) {
+						List<String> groups = jwtUtils.getRolesFromJwt(jwt);
+						List<GrantedAuthority> listaRolesSpring = convertirLista(groups);
+						
+						User usuarioJwt = new User(userName, EMPTY, listaRolesSpring);
+						authentication = new UsernamePasswordAuthenticationToken(usuarioJwt, EMPTY, listaRolesSpring);
+					}
+				}
+				
+				if (authentication != null) {
+					SecurityContextHolder.getContext().setAuthentication(authentication);
+				}
+				
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			SecurityContextHolder.clearContext();
+			HttpServletResponse responseNew = (HttpServletResponse) response;
+			responseNew.setHeader(HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, ALL_ORIGIN);
+			responseNew.setHeader(HEADER_ACCESS_CONTROL_ALLOW_METHODS, METHODS_HTTP);
+			responseNew.setHeader(HEADER_ACCESS_CONTROL_ALLOW_HEADERS, ALLOW_HEADERS);
+		}
+			
+		
+	}
+
+	private static List<GrantedAuthority> convertirLista(List<String> rolesCognito) {
+		List<GrantedAuthority> listaRolesSpring = new ArrayList<GrantedAuthority>();
+		if(rolesCognito == null) {
+			listaRolesSpring.add(new SimpleGrantedAuthority(PREFIX_ROLE + USUARIO));
+		}else {
+			for(String roleCognito : rolesCognito) {
+				listaRolesSpring.add(new SimpleGrantedAuthority(PREFIX_ROLE + roleCognito.toUpperCase()));
+			}
+		}
+		return listaRolesSpring;
+	}
+
+}

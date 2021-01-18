@@ -1,0 +1,49 @@
+package com.kenyo.tienda.service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+
+import com.kenyo.tienda.domain.Cliente;
+import com.kenyo.tienda.model.JwtDto;
+import com.kenyo.tienda.model.LoginDto;
+import com.kenyo.tienda.security.jwt.JwtUtils;
+import com.kenyo.tienda.service.impl.UserDetailsImpl;
+
+@Component
+public class AutenticacionService {
+	
+	@Autowired
+	AuthenticationManager authenticationManager;
+	
+	@Autowired
+	JwtUtils jwtUtils;
+	
+	public JwtDto autenticar(LoginDto loginDto) {
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
+		
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		String jwt = jwtUtils.generateJwtToken(authentication);
+		
+		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();	
+		List<String> roles = userDetails.getAuthorities().stream()
+				.map(item -> item.getAuthority())
+				.collect(Collectors.toList());
+		Cliente cliente = new Cliente();
+		cliente.setId(userDetails.getId());
+		cliente.setDni(userDetails.getDni());
+		cliente.setApellido(userDetails.getApellido());
+		cliente.setEmail(userDetails.getEmail());
+		cliente.setNombre(userDetails.getNombre());
+		cliente.setTelefono(userDetails.getTelefono());
+		return new JwtDto(jwt, cliente, roles);
+	}
+
+}
